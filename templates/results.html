@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">{{ standard.name }} — Day-wise Timetable
+    <span class="badge bg-success">{{ status_name }}</span>
+  </h4>
+  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← Back to Setup</a>
+</div>
+
+<div class="row g-3">
+  {% for d in days %}
+  <div class="col-12">
+    <div class="card p-3">
+      <h6 class="mb-2">
+        {{ d }}
+        {% for tid, adays in absent_today.items() %}
+          {% if d in adays %}
+            <span class="badge bg-danger ms-1">{{ teacher_names.get(tid, tid) }} absent</span>
+          {% endif %}
+        {% endfor %}
+      </h6>
+      <div class="table-responsive">
+        <table class="table table-bordered text-center align-middle mb-0">
+          <thead>
+            <tr>{% for p in periods %}<th>P{{ p }}</th>{% endfor %}</tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for p in periods %}
+                <td>
+                  {% set e = grid[d][p] %}
+                  {% if e %}
+                    <div class="cell-filled">
+                      <strong>{{ e.subject_name }}</strong><br>
+                      {{ e.teacher_name }}
+                    </div>
+                  {% else %}
+                    <span class="cell-empty">Free</span>
+                  {% endif %}
+                </td>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
